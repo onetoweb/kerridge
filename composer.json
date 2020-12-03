@@ -1,0 +1,31 @@
+{
+    "name": "onetoweb/kerridge",
+    "description": "Kerridge API Client",
+    "keywords": [
+        "api",
+        "php",
+        "kerridge"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/onetoweb/kerridge",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan van 't Ende",
+            "email": "jvantende@onetoweb.nl"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "spatie/array-to-xml": "^2.15"
+    },
+    "require-dev": {
+        "symfony/error-handler": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Onetoweb\\Kerridge\\": "src/"
+        }
+    }
+}
