@@ -57,12 +57,12 @@ class Client
      */
     public function arrayChangeKeyCaseRecursive(array $array, string $case = CASE_UPPER): array
     {
-        return array_map(function($item) {
+        return array_map(function($item) use ($case) {
             if(is_array($item)) {
-                $item = $this->arrayChangeKeyCaseRecursive($item);
+                $item = $this->arrayChangeKeyCaseRecursive($item, $case);
             }
             return $item;
-        }, array_change_key_case($array, CASE_UPPER));
+        }, array_change_key_case($array, $case));
     }
     
     /**
