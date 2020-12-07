@@ -21,7 +21,8 @@
         "spatie/array-to-xml": "^2.15"
     },
     "require-dev": {
-        "symfony/error-handler": "^5.1"
+        "symfony/error-handler": "^5.1",
+        "symfony/http-foundation": "^5.2"
     },
     "autoload": {
         "psr-4": {
