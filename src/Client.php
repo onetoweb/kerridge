@@ -6,6 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Exception\RequestException;
 use Spatie\ArrayToXml\ArrayToXml;
+use Onetoweb\Config\Type;
 use SimpleXMLElement;
 
 /**
@@ -16,21 +17,15 @@ use SimpleXMLElement;
  */
 class Client
 {
-    const TYPE_STRING = 'string';
-    const TYPE_INT = 'int';
-    const TYPE_FLOAT = 'float';
-    
-    /**
-     * @var string
-     */
-    private $baseUrl;
-    
     /**
      * @param string $baseUrl
      */
-    public function __construct(string $baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
+    public function __construct(
+        
+        #[\SensitiveParameter]
+        private string $baseUrl
+    ) {
+        
     }
     
     /**
@@ -87,7 +82,7 @@ class Client
         ];
         
         $client = new GuzzleClient();
-        $response  = $client->request('POST', "{$this->baseUrl}vhp_exml.pcd", $options);
+        $response  = $client->post("{$this->baseUrl}vhp_exml.pcd", $options);
         
         return $response->getBody()->getContents();
     }
@@ -123,7 +118,7 @@ class Client
      * 
      * @return mixed string|int|float|null
      */
-    public function getValue(SimpleXMLElement $element, string $key, string $type = TYPE_STRING)
+    public function getValue(SimpleXMLElement $element, string $key, Type $type = Type::STRING): mixed
     {
         $value = $element->{$key};
         
@@ -144,24 +139,24 @@ class Client
     public function getItem(SimpleXMLElement $element): array
     {
         $item = [
-            'itemid' => $this->getValue($element, 'Itemid', self::TYPE_INT),
-            'name' => $this->getValue($element, 'Name', self::TYPE_STRING),
-            'sortvalue' => $this->getValue($element, 'Sortvalue', self::TYPE_STRING),
-            'item_type' => $this->getValue($element, 'ItemType', self::TYPE_STRING),
-            'is_blocked' => $this->getValue($element, 'IsBlocked', self::TYPE_INT),
-            'width' => $this->getValue($element, 'Width', self::TYPE_FLOAT),
-            'length' => $this->getValue($element, 'Length', self::TYPE_FLOAT),
-            'weight' => $this->getValue($element, 'Weight', self::TYPE_FLOAT),
-            'height' => $this->getValue($element, 'Height', self::TYPE_FLOAT),
-            'volume' => $this->getValue($element, 'Volume', self::TYPE_FLOAT),
-            'brand' => $this->getValue($element, 'Brand', self::TYPE_STRING),
-            'type' => $this->getValue($element, 'Type', self::TYPE_STRING),
-            'sales_unit' => $this->getValue($element, 'SalesUnit', self::TYPE_INT),
-            'price_unit' => $this->getValue($element, 'PriceUnit', self::TYPE_INT),
-            'rent_price_per_day' => $this->getValue($element, 'RentPricePerDay', self::TYPE_FLOAT),
-            'rent_price_per_day_incl_vat' => $this->getValue($element, 'RentPricePerDayInclVat', self::TYPE_FLOAT),
-            'sales_price' => $this->getValue($element, 'SalesPrice', self::TYPE_FLOAT),
-            'sales_price_incl_vat' => $this->getValue($element, 'SalesPriceInclVat', self::TYPE_FLOAT),
+            'itemid' => $this->getValue($element, 'Itemid', Type::INT),
+            'name' => $this->getValue($element, 'Name', Type::STRING),
+            'sortvalue' => $this->getValue($element, 'Sortvalue', Type::STRING),
+            'item_type' => $this->getValue($element, 'ItemType', Type::STRING),
+            'is_blocked' => $this->getValue($element, 'IsBlocked', Type::INT),
+            'width' => $this->getValue($element, 'Width', Type::FLOAT),
+            'length' => $this->getValue($element, 'Length', Type::FLOAT),
+            'weight' => $this->getValue($element, 'Weight', Type::FLOAT),
+            'height' => $this->getValue($element, 'Height', Type::FLOAT),
+            'volume' => $this->getValue($element, 'Volume', Type::FLOAT),
+            'brand' => $this->getValue($element, 'Brand', Type::STRING),
+            'type' => $this->getValue($element, 'Type', Type::STRING),
+            'sales_unit' => $this->getValue($element, 'SalesUnit', Type::INT),
+            'price_unit' => $this->getValue($element, 'PriceUnit', Type::INT),
+            'rent_price_per_day' => $this->getValue($element, 'RentPricePerDay', Type::FLOAT),
+            'rent_price_per_day_incl_vat' => $this->getValue($element, 'RentPricePerDayInclVat', Type::FLOAT),
+            'sales_price' => $this->getValue($element, 'SalesPrice', Type::FLOAT),
+            'sales_price_incl_vat' => $this->getValue($element, 'SalesPriceInclVat', Type::FLOAT),
             'subitems' => [],
             'extra_description' => [],
             'synonims' => [],
@@ -173,11 +168,11 @@ class Client
             foreach ($element->Subitems->children() as $child) {
                 
                 $item['subitems'][] = [
-                    'sub_itemid' => $this->getValue($child, 'SubItemid', self::TYPE_INT),
-                    'seq_sub_item' => $this->getValue($child, 'SeqSubItem', self::TYPE_INT),
-                    'quantiy' => $this->getValue($child, 'Quantiy', self::TYPE_FLOAT),
-                    'is_mandatory' => $this->getValue($child, 'IsMandatory', self::TYPE_INT),
-                    'is_price_included_mainitem' => $this->getValue($child, 'IsPriceIncludedMainitem', self::TYPE_INT),
+                    'sub_itemid' => $this->getValue($child, 'SubItemid', Type::INT),
+                    'seq_sub_item' => $this->getValue($child, 'SeqSubItem', Type::INT),
+                    'quantiy' => $this->getValue($child, 'Quantiy', Type::FLOAT),
+                    'is_mandatory' => $this->getValue($child, 'IsMandatory', Type::INT),
+                    'is_price_included_mainitem' => $this->getValue($child, 'IsPriceIncludedMainitem', Type::INT),
                 ];
                 
             }
@@ -188,8 +183,8 @@ class Client
             foreach ($element->ExtraDescriptions->children() as $child) {
                 
                 $item['extra_description'][] = [
-                    'seq_extra_descr' => $this->getValue($child, 'SeqExtraDescr', self::TYPE_INT),
-                    'extra_description_line' => $this->getValue($child, 'ExtraDescriptionLine', self::TYPE_STRING),
+                    'seq_extra_descr' => $this->getValue($child, 'SeqExtraDescr', Type::INT),
+                    'extra_description_line' => $this->getValue($child, 'ExtraDescriptionLine', Type::STRING),
                 ];
                 
             }
@@ -200,8 +195,8 @@ class Client
             foreach ($element->Alternatives->children() as $child) {
                 
                 $item['alternatives'][] = [
-                    'sequence_alt' => $this->getValue($child, 'SequenceAlt', self::TYPE_INT),
-                    'item_id_alt' => $this->getValue($child, 'ItemIdAlt', self::TYPE_INT),
+                    'sequence_alt' => $this->getValue($child, 'SequenceAlt', Type::INT),
+                    'item_id_alt' => $this->getValue($child, 'ItemIdAlt', Type::INT),
                 ];
                 
             }
